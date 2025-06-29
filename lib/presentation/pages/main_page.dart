@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/navigation/navigation_bloc.dart';
 import '../bloc/navigation/navigation_event.dart';
 import '../bloc/navigation/navigation_state.dart';
-import '../bloc/home/home_bloc.dart';
-import '../bloc/explore/explore_bloc.dart';
-import '../bloc/profile/profile_bloc.dart';
-import 'home_page.dart';
-import 'explore_page.dart';
-import 'profile_page.dart';
+import 'mental_page.dart';
+import 'physical_page.dart';
+import 'health_page.dart';
+import 'goals_page.dart';
+import 'settings_page.dart';
 import '../../core/di/injection_container.dart' as di;
 
 class MainPage extends StatelessWidget {
@@ -21,18 +20,11 @@ class MainPage extends StatelessWidget {
           body: IndexedStack(
             index: state.currentIndex,
             children: [
-              BlocProvider(
-                create: (_) => di.sl<HomeBloc>(),
-                child: HomePage(),
-              ),
-              BlocProvider(
-                create: (_) => di.sl<ExploreBloc>(),
-                child: ExplorePage(),
-              ),
-              BlocProvider(
-                create: (_) => di.sl<ProfileBloc>(),
-                child: ProfilePage(),
-              ),
+              MentalPage(),
+              PhysicalPage(),
+              HealthPage(),
+              GoalsPage(),
+              SettingsPage(),
             ],
           ),
           bottomNavigationBar: Container(
@@ -48,30 +40,44 @@ class MainPage extends StatelessWidget {
             ),
             child: SafeArea(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildNavItem(
                       context,
                       0,
-                      Icons.home_rounded,
-                      'Home',
+                      Icons.psychology_rounded,
+                      'Mental',
                       state.currentIndex == 0,
                     ),
                     _buildNavItem(
                       context,
                       1,
-                      Icons.explore_rounded,
-                      'Explore',
+                      Icons.fitness_center_rounded,
+                      'Physical',
                       state.currentIndex == 1,
                     ),
                     _buildNavItem(
                       context,
                       2,
-                      Icons.person_rounded,
-                      'Profile',
+                      Icons.favorite_rounded,
+                      'Health',
                       state.currentIndex == 2,
+                    ),
+                    _buildNavItem(
+                      context,
+                      3,
+                      Icons.flag_rounded,
+                      'Goals',
+                      state.currentIndex == 3,
+                    ),
+                    _buildNavItem(
+                      context,
+                      4,
+                      Icons.settings_rounded,
+                      'Settings',
+                      state.currentIndex == 4,
                     ),
                   ],
                 ),
@@ -96,30 +102,28 @@ class MainPage extends StatelessWidget {
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
               color: isSelected ? Colors.blue : Colors.grey[600],
-              size: 24,
+              size: 20,
             ),
-            if (isSelected) ...[
-              SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.blue : Colors.grey[600],
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                fontSize: 11,
               ),
-            ],
+            ),
           ],
         ),
       ),
